@@ -4,6 +4,7 @@ import (
 	"log/slog"
 	"os"
 
+	"github.com/alexm24/sso/internal/app"
 	"github.com/alexm24/sso/internal/config"
 )
 
@@ -20,6 +21,10 @@ func main() {
 	log := setupLogger(cfg.Env)
 
 	log.Info("starting", slog.String("env", cfg.Env))
+
+	application := app.New(log, cfg.GRPC.Port, cfg.StoragePath, cfg.TokenTTL)
+
+	application.GRPCServer.MustRun()
 }
 
 func setupLogger(env string) *slog.Logger {
